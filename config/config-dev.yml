@@ -1,0 +1,38 @@
+server:
+    AppVersion: 1.0.0
+    Port: :8080
+    Mode: Development
+    JwtSecretKey: secretkey
+    CookieName: inv-token
+    ReadTimeout: 5
+    WriteTimeout: 5
+    SSL: true
+    CtxDefaultTimeout: 12
+    CSRF: true
+    Debug: false
+    MaxConnectionIdle: 5
+    Timeout: 15
+    MaxConnectionAge: 5
+    Time: 120
+    ServiceName: backend
+    TimeConvert: '2006-01-02'
+
+Mssql:
+    MySqlHost: 
+    MySqlPort: 3306
+    MySqlUser: admin
+    MySqlPassword: 12345678
+    MySqlDbname: db_name
+    MySqlSslmode: false
+    MySqlDriver: mssql
+
+redis:
+    RedisAddr: 
+    RedisPassword:
+    RedisDb: 0
+    RedisDefaultdb: 0
+    MinIdleConns: 200
+    PoolSize: 12000
+    PoolTimeout: 240
+    Password: ''
+    DB: 0
