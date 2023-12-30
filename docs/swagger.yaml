@@ -1,0 +1,136 @@
+definitions:
+  models.UserResponse:
+    properties:
+      about:
+        type: string
+      address:
+        type: string
+      avatar:
+        type: string
+      city:
+        type: string
+      first_name:
+        type: string
+      gender:
+        type: string
+      id:
+        type: integer
+      last_name:
+        type: string
+      merchant:
+        type: string
+      phone_number:
+        type: string
+      role:
+        type: string
+      user_id:
+        type: string
+      user_name:
+        type: string
+    type: object
+  models.UserWithToken:
+    properties:
+      message:
+        type: string
+      payload:
+        $ref: '#/definitions/models.UserResponse'
+      result:
+        type: string
+      status_code:
+        type: integer
+      token:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Login and return token
+      parameters:
+      - description: Email
+        in: body
+        name: Email
+        required: true
+        schema:
+          type: string
+      - description: Password
+        in: body
+        name: Password
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.UserWithToken'
+      summary: Login
+      tags:
+      - Auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Create new user, returns user and token
+      parameters:
+      - description: First name
+        in: body
+        name: FirstName
+        required: true
+        schema:
+          type: string
+      - description: Last name
+        in: body
+        name: LastName
+        required: true
+        schema:
+          type: string
+      - description: Email
+        in: body
+        name: Email
+        required: true
+        schema:
+          type: string
+      - description: Password
+        in: body
+        name: Password
+        required: true
+        schema:
+          type: string
+      - description: Gender
+        in: body
+        name: Gender
+        required: true
+        schema:
+          type: string
+      - description: City
+        in: body
+        name: City
+        schema:
+          type: string
+      - description: Country
+        in: body
+        name: Country
+        schema:
+          type: string
+      - description: Gender
+        in: body
+        name: Birthday
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.UserResponse'
+      summary: Create new user
+      tags:
+      - Auth
+swagger: "2.0"

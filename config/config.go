@@ -1,91 +1,66 @@
 package config
 
 import (
-	"errors"
-	"log"
-	"path/filepath"
-	"runtime"
 	"time"
 
 	"github.com/spf13/viper"
 )
 
-// App config struct
 type Config struct {
-	Server config.ServerConfig
-	Mysql  config.MysqlConfig
-	Redis  config.RedisConfig
+	Auth       AuthConfig
+	Redis      RedisConfig
+	PostgreSQL PostgreSQLConfig
+	Server     ServerConfig
+}
+type PostgreSQLConfig struct {
+	Host     string
+	Port     int
+	User     string
+	Password string
+	DBName   string
 }
 
-// Server config struct
+type RedisConfig struct {
+	Host         string
+	Port         int
+	PoolSize     int
+	PoolTimeout  int
+	MinIdleConns int
+	DB           int
+	Username     string
+	Password     string
+}
+
 type ServerConfig struct {
 	AppVersion        string
 	Port              string
 	Mode              string
-	JwtSecretKey      string
-	CookieName        string
 	ReadTimeout       time.Duration
 	WriteTimeout      time.Duration
 	SSL               bool
 	CtxDefaultTimeout time.Duration
-	CSRF              bool
 	Debug             bool
-	MaxConnectionIdle time.Duration
-	Timeout           time.Duration
-	MaxConnectionAge  time.Duration
-	Time              time.Duration
-	ServiceName       string
-	TimeConvert       string
 }
 
-type StorageConfig struct {
-	Host  string
-	Token string
+type AuthConfig struct {
+	JWTSecret string
+	Expire    int
+	Issuer    string
+	Audience  string
 }
 
-// Load config file from given path
-func LoadConfig(filename string) (*viper.Viper, error) {
-	v := viper.New()
-
-	v.SetConfigName(filename)
-	// v.AddConfigPath(".")
-	_, b, _, _ := runtime.Caller(0)
-	path_config := filepath.Join(filepath.Dir(b), "..")
-	v.AddConfigPath(path_config)
-	v.AutomaticEnv()
-	if err := v.ReadInConfig(); err != nil {
+func GetConfig() *Config {
+	viper.SetConfigName("config-dev")
+	viper.SetConfigType("yml")
+	viper.AddConfigPath("./config")
+	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			return nil, errors.New("config file not found")
+			panic("Config file not found")
 		}
-		return nil, err
 	}
-
-	return v, nil
-}
-
-// Parse config file
-func ParseConfig(v *viper.Viper) (*Config, error) {
 	var c Config
-
-	err := v.Unmarshal(&c)
-	if err != nil {
-		log.Printf("unable to decode into struct, %v", err)
-		return nil, err
+	if err := viper.Unmarshal(&c); err != nil {
+		panic("Unable to unmarshal config")
 	}
-
-	return &c, nil
-}
-
-// Get config
-func GetConfig(configPath string) (*Config, error) {
-	cfgFile, err := LoadConfig(configPath)
-	if err != nil {
-		return nil, err
-	}
-
-	cfg, err := ParseConfig(cfgFile)
-	if err != nil {
-		return nil, err
-	}
-	return cfg, nil
+	return &c
 }

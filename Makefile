@@ -1,11 +1,22 @@
-include ./config/.base.env
-export $(shell sed 's/=.*//' ./config/.base.env)
+run:
+	go run main.go
 
-server:
-	go run cmd/main.go
-
-docker-compose run:
-	docker-compose up -d --build
+test:
+	go test -cover ./...
 	
-docker-compose down:
-	docker-compose down
+tidy:
+	go mod tidy
+	
+doc:
+	echo "Starting swagger generating"
+	swag fmt
+	swag init -g main.go --pd
+	
+migrate:
+	go run migrations/migrate.go
+
+compose-up:
+	docker-compose -f ./builders/docker-compose.yml up -d --build
+
+compose-down:
+	docker-compose -f ./builders/docker-compose.yml down

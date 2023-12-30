@@ -3,7 +3,7 @@ server:
     Port: :8080
     Mode: Development
     JwtSecretKey: secretkey
-    CookieName: inv-token
+    CookieName: authscv-token
     ReadTimeout: 5
     WriteTimeout: 5
     SSL: true
@@ -14,25 +14,38 @@ server:
     Timeout: 15
     MaxConnectionAge: 5
     Time: 120
-    ServiceName: backend
+    ServiceName: distributed_database_server
     TimeConvert: '2006-01-02'
+    
+Auth:
+  JWTSecret: "your_jwt_secret"
+  Expire: 3600
+  Issuer: "your_issuer"
+  Audience: "your_audience"
 
-Mssql:
-    MySqlHost: 
-    MySqlPort: 3306
-    MySqlUser: admin
-    MySqlPassword: 12345678
-    MySqlDbname: db_name
-    MySqlSslmode: false
-    MySqlDriver: mssql
+Redis:
+  Host: "localhost"
+  Port: 6379
+  PoolSize: 12000
+  PoolTimeout: 240
+  MinIdleConns: 200
+  DB: 0
+  Username: "your_username"
+  Password: "your_password"
 
-redis:
-    RedisAddr: 
-    RedisPassword:
-    RedisDb: 0
-    RedisDefaultdb: 0
-    MinIdleConns: 200
-    PoolSize: 12000
-    PoolTimeout: 240
-    Password: ''
-    DB: 0
+PostgreSQL:
+  Host: "localhost"
+  Port: 5432
+  User: postgres
+  Password: changeme
+  DBName: database1
+
+Server:
+  AppVersion: "1.0.0"
+  Port: 8080
+  Mode: "Development"
+  ReadTimeout: 5
+  WriteTimeout: 5
+  SSL: true
+  CtxDefaultTimeout: 12
+  Debug: false
